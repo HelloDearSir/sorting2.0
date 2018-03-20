@@ -1,0 +1,106 @@
+#include <Windows.h>
+#include <iostream>
+#include <cstdlib>
+#include <ctime>//lib for the timer 
+
+
+#include <conio.h>
+#include <fstream>//For the txt file.  
+
+
+
+
+
+using namespace std;
+
+int i; 
+
+
+void bubble(int num[], int);
+void print(int num[], int);
+fstream write; // this allows to open and write to a file. 
+ 
+double			MSelapsedTime; // Million seconds time
+LARGE_INTEGER	timerFrequency; // Get how many ticks per second this system produces 
+LARGE_INTEGER timerStart, timerFinish; //This is for starting and ending the timer. 
+
+
+int main(void)
+{
+	
+	// Get how many ticks per second this system produces
+	QueryPerformanceFrequency(&timerFrequency);
+
+	// Start timer and begin calculations
+QueryPerformanceCounter(&timerStart); 
+	srand (time(NULL)); //random genador
+	int SIZE;
+	cout << endl << "How big you want the  array ? : "; //this allow me to go up to 10,000 
+	cin >> SIZE; // stores the array size. 
+	int* num = new int[SIZE]; 
+
+	for (int i = 0; i < SIZE; i++) //the for loop for being up the size with random numbers from 0 - 999 
+	{
+		num[i] = rand() % 1000;//numbers will all be random. 
+	}
+	
+	//This starts opening the file
+write.open("sort.txt", ios::out);
+	// if the file has failed it will print out file cant be found..
+	if (write.fail())
+	{
+		cout << "File cant be found" << endl; 
+	}
+	else {
+		write << " Numbers  in origional order:" << endl;
+		print(num, SIZE); //Prints out the original order 
+
+		bubble(num, SIZE); // sorts out the list 
+		//InsertionSort(n, SIZE);
+
+		write << "\Number in the right  order:" << endl;
+		print(num, SIZE);  // prints out the new order. 
+
+
+	} 
+	//finishes the timer. 
+	QueryPerformanceCounter(&timerFinish);
+	//time in million seconds. 
+	MSelapsedTime = (timerFinish.QuadPart - timerStart.QuadPart) * 1000.0 / timerFrequency.QuadPart; 
+ //prints out the ms to the 
+cout << "\n\n" << "Elapsed time: " << MSelapsedTime << "ms";
+	
+	write.close();// closes the file
+
+	_getch(); // this allows the console log to stay onto the screen until any key has been pressed.
+	return 0;
+}
+
+//This prints out the num[] and the lenghth of the size of the array. 
+//this will also write to the file.
+void print(int num[], int SIZE)
+{
+	for (i = 0; i < SIZE; ++i)
+	{
+		write << num[i] << endl;
+	}
+}
+
+
+
+void bubble(int num[], int SIZE)
+{
+	int temp; //storing numbers into temp. 
+	for (int move = 1; move < SIZE; move++) //This is the start  moving of the numbers
+
+	{
+		for (int i = 0; i < SIZE - 1; i++) { 
+			if (num[i] > num[i + 1]) { // ascending order will simply change. 
+				temp = num[i]; //swaps the elements  
+				num[i] = num[i + 1];
+				num[i + 1] = temp;  // once it has swaped all the numbers it will end. 
+
+			}
+		}
+	}
+} 
